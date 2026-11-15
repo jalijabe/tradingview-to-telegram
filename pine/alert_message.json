@@ -1,0 +1,11 @@
+{
+  "secret": "REPLACE_ME",
+  "ticker": "{{ticker}}",
+  "exchange": "{{exchange}}",
+  "interval": "{{interval}}",
+  "price": "{{close}}",
+  "bar_time": "{{time}}",
+  "fired_at": "{{timenow}}",
+  "msg": "Describe the signal here",
+  "canary": false
+}
