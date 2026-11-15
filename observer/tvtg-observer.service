@@ -1,0 +1,26 @@
+# Rendered by install.sh (@DIR@ and @USER@ are replaced). Do not edit the installed copy; re-run install.sh.
+[Unit]
+Description=tv-tg-bot Telegram reception observer
+Documentation=https://github.com/jalijabe/tradingview-to-telegram/blob/main/docs/deploy.md
+After=network-online.target chrony.service chronyd.service
+Wants=network-online.target
+
+[Service]
+User=@USER@
+Group=@USER@
+WorkingDirectory=@DIR@
+# Root-only file (chmod 600); systemd reads it before dropping privileges.
+EnvironmentFile=-/etc/tvtg-observer.env
+Environment=SESSION_PATH=@DIR@/observer.session PYTHONUNBUFFERED=1
+ExecStart=@DIR@/.venv/bin/python @DIR@/observer.py run
+# Exit code 78 = configuration incomplete; keep retrying so it starts on its own once secrets are in place.
+Restart=always
+RestartSec=30
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+ReadWritePaths=@DIR@
+
+[Install]
+WantedBy=multi-user.target
