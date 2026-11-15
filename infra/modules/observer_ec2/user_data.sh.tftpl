@@ -1,0 +1,45 @@
+#!/bin/bash
+# cloud-init user data for the tv-tg-bot observer, rendered by Terraform. Contains no secrets:
+# the observer reads them from SSM (${ssm_prefix}/*) every time the service starts.
+set -euo pipefail
+exec > >(tee -a /var/log/tvtg-observer-bootstrap.log) 2>&1
+
+SRC=/opt/tvtg-observer-src
+mkdir -p "$SRC"
+
+cat > "$SRC/observer.py" <<'TVTG_EOF_OBSERVER_PY'
+${observer_py}
+TVTG_EOF_OBSERVER_PY
+
+cat > "$SRC/install.sh" <<'TVTG_EOF_INSTALL_SH'
+${install_sh}
+TVTG_EOF_INSTALL_SH
+
+cat > "$SRC/tvtg-observer.service" <<'TVTG_EOF_UNIT'
+${unit}
+TVTG_EOF_UNIT
+
+cat > "$SRC/requirements.txt" <<'TVTG_EOF_REQ'
+${requirements}
+TVTG_EOF_REQ
+
+cat > "$SRC/requirements-aws.txt" <<'TVTG_EOF_REQ_AWS'
+${requirements_aws}
+TVTG_EOF_REQ_AWS
+
+cat > "$SRC/observer.env.example" <<'TVTG_EOF_ENV_EXAMPLE'
+${env_example}
+TVTG_EOF_ENV_EXAMPLE
+
+umask 077
+cat > /etc/tvtg-observer.env <<'TVTG_EOF_ENV'
+OBSERVER_NAME=${observer_name}
+CHAT_IDS=${chat_ids}
+COLLECTOR_URL=${collector_url}
+OBSERVER_SSM_PREFIX=${ssm_prefix}
+AWS_REGION=${region}
+COLLECTOR_KEY_SSM=${collector_key_param}
+COLLECTOR_KEY_SSM_REGION=${pipeline_region}
+TVTG_EOF_ENV
+
+bash "$SRC/install.sh" --src "$SRC" --env-file /etc/tvtg-observer.env --with-aws --pkg dnf

@@ -1,0 +1,4 @@
+# Copy to terraform.tfvars (git-ignored) or set TF_VAR_* in CI.
+chat_id        = "-1001234567890"
+canary_chat_id = "-1009876543210"
+alarm_email    = "you@example.com"
