@@ -62,7 +62,7 @@ jobs:
           # Incomplete config must make `check` fail with exit code 1.
           code=0; docker run --rm -e TG_API_ID=1 tvtg-observer:test check || code=$?
           test "$code" -eq 1
-          docker run --rm tvtg-observer:aws python -c "import boto3, telethon"
+          docker run --rm --entrypoint python tvtg-observer:aws -c "import boto3, telethon"
 
   plan-dev:
     # Runs once the AWS roles exist (docs/deploy.md step 1) and the repo variables are set.
