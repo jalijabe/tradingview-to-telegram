@@ -1,0 +1,29 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+out/
+export/
+
+# Terraform
+infra/**/.terraform/
+infra/**/.build/
+infra/modules/**/.terraform.lock.hcl
+*.tfstate
+*.tfstate.*
+terraform.tfvars
+
+# Observer secrets
+*.session
+*.session-journal
+.env
+
+# Observer config with secrets (Docker)
+observer/observer.env
+
+# ASH: local install + scanner binaries, scan output
+.tools/
+.ash/ash_output/
