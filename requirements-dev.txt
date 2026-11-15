@@ -1,0 +1,8 @@
+boto3>=1.35
+moto[sqs,dynamodb,ssm,logs]>=5.0
+pytest>=8
+pytest-cov>=5
+matplotlib>=3.9
+ruff>=0.6
+shellcheck-py>=0.10
+telethon>=1.36,<2
