@@ -1,0 +1,24 @@
+[project]
+name = "tv-tg-bot"
+version = "0.1.0"
+description = "TradingView -> AWS -> Telegram alerts with per-hop latency instrumentation"
+requires-python = ">=3.12"
+
+[tool.pytest.ini_options]
+pythonpath = ["src", "."]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+
+[tool.coverage.run]
+source = ["src/tvtg", "observer", "tools"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = [".venv", "infra"]
+
+# observer.py also runs on Amazon Linux 2023's system Python (3.9) on the EC2 observer host.
+per-file-target-version = { "observer/observer.py" = "py39" }
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "BLE"]

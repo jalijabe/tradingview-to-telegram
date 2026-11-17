@@ -1,0 +1,9 @@
+//@version=6
+// Pipeline canary: produces a steady stream of timing samples.
+// Add it to a 1-minute BTCUSD chart, then create an alert:
+//   Condition: "Pipeline canary" -> "Canary"   Frequency: "Once Per Bar Close"
+//   Notifications: Webhook URL = the ingest Function URL
+//   Message: leave as is (the JSON below); replace REPLACE_ME with the TradingView secret
+// Once a minute stays well under TradingView's limit of 15 triggers per 3 minutes.
+indicator("Pipeline canary", overlay = true)
+alertcondition(true, "Canary", '{"secret":"REPLACE_ME","ticker":"{{ticker}}","exchange":"{{exchange}}","interval":"{{interval}}","price":"{{close}}","bar_time":"{{time}}","fired_at":"{{timenow}}","msg":"canary","canary":true}') // pragma: allowlist secret (REPLACE_ME placeholder)

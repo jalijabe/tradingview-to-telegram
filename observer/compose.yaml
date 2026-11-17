@@ -1,0 +1,19 @@
+# cp observer.env.example observer.env && chmod 600 observer.env   (fill in TG_API_ID / TG_API_HASH first)
+# docker compose run --rm observer login      -> put the printed TG_SESSION into observer.env
+# docker compose run --rm observer check
+# docker compose up -d && docker compose logs -f
+services:
+  observer:
+    build:
+      context: .
+      args:
+        WITH_AWS: "0" # "1" if secrets come from SSM (then also pass AWS credentials)
+    image: tvtg-observer
+    env_file: observer.env
+    restart: unless-stopped
+    stop_grace_period: 5s
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"

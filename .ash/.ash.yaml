@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/awslabs/automated-security-helper/refs/heads/main/automated_security_helper/schemas/AshConfig.json
+# ASH (AWS Automated Security Helper) v3.8.0 configuration. Run locally with `make ash`; CI runs the same target
+# (.github/workflows/ash.yml). Every suppression needs a reason; prefer fixing the finding.
+project_name: tv-tg-bot
+
+fail_on_findings: true
+fail_on_incomplete_scanners: true
+
+global_settings:
+  severity_threshold: MEDIUM
+  ignore_paths:
+    - path: .venv/**
+      reason: local virtualenv (third-party code)
+    - path: .tools/**
+      reason: local ASH install and scanner binaries
+    - path: out/**
+      reason: generated mock data and graphs
+    - path: export/**
+      reason: exported CloudWatch data
+    - path: "**/.terraform/**"
+      reason: downloaded Terraform providers
+    - path: "**/.build/**"
+      reason: Lambda zip built by Terraform
+  suppressions:
+    - path: pine/alert_message.json
+      rule_id: SECRET-SECRET-KEYWORD
+      reason: Template placeholder (REPLACE_ME). The real secret lives in SSM and is pasted into TradingView, never committed; JSON allows no inline pragma
+
+scanners:
+  cfn-nag:
+    enabled: false # CloudFormation only (this repo is Terraform); also needs Ruby
+  cdk-nag:
+    enabled: false # AWS CDK only (this repo is Terraform); needs Node.js and the [cdk] extra
